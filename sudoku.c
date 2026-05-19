@@ -23,69 +23,79 @@
 #include <stdlib.h>
 #include <math.h>
 
-void crearTablero(int tablero[9][9]);
 void imprimirTablero(int tablero[9][9]);
+int resolver(int tablero[9][9], int pos_fila, int pos_col);
+int revisar(int tablero[9][9], int num, int x, int y);
 
 int main()
 {
-	int tablero1[9][9], tablero2[9][9], tablero3[9][9], tablero4[9][9];
-	crearTablero(tablero1);
-	crearTablero(tablero2);
-	crearTablero(tablero3);
-	crearTablero(tablero4);
+  int sudokus[4][9][9] = {
+    {   // Tablero 1 
+      {0, 0, 9, 3, 4, 6, 7, 8, 5},
+      {7, 5, 0, 2, 1, 0, 0, 9, 6},
+      {0, 6, 8, 7, 9, 0, 4, 2, 0},
+      {4, 9, 0, 0, 6, 7, 1, 5, 0},
+      {6, 1, 7, 4, 5, 2, 8, 0, 0},
+      {5, 8, 0, 1, 0, 9, 6, 0, 4},
+      {2, 0, 0, 5, 8, 4, 9, 0, 3},
+      {9, 3, 0, 6, 7, 1, 0, 4, 8},
+      {8, 4, 6, 0, 0, 0, 5, 1, 7}
+    },
+    {   // Tablero 2
+      {0, 0, 9, 0, 4, 6, 7, 0, 5},
+      {7, 0, 0, 0, 1, 0, 3, 0, 0},
+      {3, 6, 8, 0, 9, 5, 0, 0, 0},
+      {4, 0, 0, 8, 0, 7, 0, 0, 2},
+      {0, 1, 7, 0, 0, 0, 8, 0, 9},
+      {5, 0, 0, 1, 3, 0, 0, 0, 0},
+      {0, 0, 1, 5, 0, 4, 9, 0, 0},
+      {0, 3, 5, 0, 0, 1, 0, 4, 0},
+      {8, 0, 0, 9, 2, 0, 5, 0, 7}
+    },
+    {   // Tablero 3
+      {0, 0, 9, 0, 4, 0, 7, 0, 5},
+      {0, 5, 4, 0, 1, 0, 0, 0, 0},
+      {3, 0, 0, 7, 0, 0, 0, 0, 1},
+      {0, 0, 0, 0, 0, 7, 1, 0, 2},
+      {6, 0, 7, 0, 5, 0, 8, 0, 0},
+      {5, 8, 0, 0, 0, 0, 6, 0, 0},
+      {0, 0, 0, 5, 8, 0, 0, 6, 0},
+      {0, 0, 5, 6, 0, 0, 0, 4, 8},
+      {8, 4, 0, 0, 0, 0, 0, 1, 0}
+    },
+    {   // Tablero 4 
+      {0, 0, 9, 0, 4, 0, 7, 0, 0},
+      {0, 5, 0, 0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 5, 0, 0, 1},
+      {4, 0, 0, 8, 0, 0, 0, 0, 0},
+      {6, 0, 7, 0, 0, 0, 8, 0, 0},
+      {0, 0, 0, 1, 3, 0, 0, 7, 0},
+      {0, 7, 0, 0, 0, 0, 0, 0, 0},
+      {9, 0, 0, 0, 0, 1, 0, 4, 0},
+      {0, 4, 0, 0, 0, 0, 5, 0, 7}
+    }
+  };
 
-	tablero1[5][7] = 1;
-
-	printf("\nTablero 1:\n");
-	imprimirTablero(tablero1);
-
-	/*
-	printf("Tablero 2:\n");
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
-			printf("%d ", tablero2[i][j]);
-		}
-		printf("\n");
-	}
-	printf("Tablero 3:\n");
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
-			printf("%d ", tablero3[i][j]);
-		}
-		printf("\n");
-	}
-	printf("Tablero 4:\n");
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
-			printf("%d ", tablero4[i][j]);
-		}
-		printf("\n");
-	}
-	*/
+  printf("\nTableros:\n");
+  for(int i = 0; i < 4; i++)
+    imprimirTablero(sudokus[i]);
+	printf("=====================================\n");
 
 	printf("\n");
+  for(int i = 0; i < 4; i++) {
+    if (resolver(sudokus[i], 0, 0) == 1) {
+      printf("\nSolucion del Tablero %d:\n", i + 1);
+      imprimirTablero(sudokus[i]);
+    } else {
+      printf("\nNo se encontro solucion para el Tablero %d\n", i + 1);
+    }
+  }
 	return 0;
-}
-
-void crearTablero(int tablero[9][9])
-{
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
-			tablero[i][j] = 0;
-		}
-	}
 }
 
 void imprimirTablero(int tablero[9][9])
 {
+	printf("=====================================\n");
 	for (int k = 0; k < 16; k++) printf("- ");
 	printf("\n");
 	for (int i = 0; i < 9; i++)
@@ -107,5 +117,74 @@ void imprimirTablero(int tablero[9][9])
 		}
 	}
 	for (int k = 0; k < 16; k++) printf("- ");
-	printf("\n");
+  printf("\n");
 }
+
+/*
+ * Esta funcion se encargará de resolver el sudoku
+ */
+
+int resolver(int tablero[9][9], int fila, int col) {
+  // si llegamos a la fila 9 (no existe) entonces terminamos
+  if(fila == 9)
+    return 1;
+  
+  // si ya terminamos las columnas entonces cambiamos 
+  // de fila y reiniciamos el contador de columnas
+  if(col == 9)
+    return resolver(tablero, fila + 1, 0);
+
+  // si la casilla actual tiene un numero avanzamos a la siguiente
+  if(tablero[fila][col] != 0)
+    return resolver(tablero, fila, col + 1);
+
+  for (int num = 1; num <= 9; num++) {
+    if (revisar(tablero, num, fila, col)) {
+      tablero[fila][col] = num;
+
+      if (resolver(tablero, fila, col + 1) == 1)
+        return 1;
+      
+      // si la llamada anterior retorna 0
+      // entonces fue que no pudo encontrar un valor valido
+      // se vacía la casilla y seguimos probando números
+      tablero[fila][col] = 0;
+    }
+  }
+  // caso: ningun numero se pudo poner
+  return 0;
+}
+
+/*
+ * Esta funcion se encargará de verificar si el número se
+ * puede colocar
+ */
+
+int revisar(int tablero[9][9], int num, int fila, int col) {
+  // Revisar fila 
+  for(int i = 0; i < 9; i++) {
+    if(tablero[fila][i] == num)
+      return 0;
+  }
+  
+  // Revisar columna 
+  for(int i = 0; i < 9; i++) {
+    if(tablero[i][col] == num)
+      return 0;
+  }
+
+  // Revisar la caja
+  int inicioFila = (fila / 3) * 3;
+  int inicioCol = (col / 3) * 3;
+
+  for(int i = 0; i < 3; i++) {
+    for(int j = 0; j < 3; j++) {
+      if (tablero[inicioFila + i][inicioCol + j] == num) 
+        return 0;
+    }
+  }
+  
+  // Pasó todas las comprobaciones
+  return 1;
+}
+
